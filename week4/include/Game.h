@@ -1,0 +1,108 @@
+#pragma once
+
+#include "raylib.h"
+#include "Ball.h"
+#include "Paddle.h"
+#include "Brick.h"
+#include "GameState.h"
+#include <vector>
+#include <string>
+#include <algorithm>
+
+class Game {
+public:
+    Game();
+    ~Game();
+    
+    void Init();
+    void Update();
+    void Draw();
+    void Shutdown();
+    
+private:
+    // 窗口尺寸
+    int SW;
+    int SH;
+    std::string windowTitle;
+    
+    // 游戏状态
+    GameState state;
+    int score;
+    int lives;
+    
+    // 游戏对象
+    Ball ball;
+    Paddle paddle;
+    std::vector<Brick> bricks;
+    
+    // 排行榜
+    struct ScoreEntry {
+        std::string name;
+        int score;
+        std::string date;
+    };
+    std::vector<ScoreEntry> leaderboard;
+    std::string playerName;
+    int nameInputCursor;
+    bool isEnteringName;
+    
+    // 配置参数（从JSON读取）
+    struct {
+        // Ball 配置
+        float ballRadius;
+        float ballSpeedX;
+        float ballSpeedY;
+        float gravity;
+        float maxSpeed;
+        float bounceForce;
+        
+        // Paddle 配置
+        int paddleWidth;
+        int paddleHeight;
+        int paddleSpeed;
+        int paddleYOffset;
+        int paddleBoostSpeed;
+        
+        // Bricks 配置
+        int brickRows;
+        int brickCols;
+        float brickWidth;
+        float brickHeight;
+        float brickStartX;
+        float brickStartY;
+        float brickPaddingX;
+        float brickPaddingY;
+        
+        // Game 配置
+        int initialLives;
+        int scorePerBrick;
+        float timeMultiplierDecay;
+        
+    } config;
+    
+    // 方法
+    void LoadConfig(const std::string& path);
+    void LoadLeaderboard();
+    void SaveLeaderboard();
+    void AddScoreToLeaderboard();
+    void BuildBricks();
+    void ResetGame();
+    void ChangeState(GameState newState);
+    
+    // 状态处理
+    void HandleMenuState();
+    void HandlePlayingState();
+    void HandlePausedState();
+    void HandleGameOverState();
+    void HandleWinState();
+    void HandleLeaderboardState();
+    
+    // 绘制方法
+    void DrawMenu();
+    void DrawPlaying();
+    void DrawPaused();
+    void DrawGameOver();
+    void DrawWin();
+    void DrawLeaderboard();
+    void DrawNameInput();
+};
