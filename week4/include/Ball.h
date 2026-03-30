@@ -21,7 +21,9 @@ public:
     void ReverseX() { speed.x *= -1; }
     void ReverseY() { speed.y *= -1; }
     
+    // Getter 方法
     Vector2 GetPosition() const { return position; }
+    Vector2 GetSpeed() const { return speed; }   // ← 添加这行
     float GetRadius() const { return radius; }
     
 private:
