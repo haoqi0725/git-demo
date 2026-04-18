@@ -1,0 +1,42 @@
+{
+    "window": {
+        "width": 800,
+        "height": 600,
+        "title": "ARKANOID 2D"
+    },
+    "ball": {
+        "radius": 10,
+        "speedX": 3,
+        "speedY": -4,
+        "gravity": 0.08,
+        "maxSpeed": 15,
+        "bounceForce": 0.5
+    },
+    "paddle": {
+        "width": 120,
+        "height": 15,
+        "speed": 8,
+        "yOffset": 50,
+        "boostSpeed": 28
+    },
+    "bricks": {
+        "rows": 5,
+        "cols": 8,
+        "width": 85,
+        "height": 25,
+        "startX": 25,
+        "startY": 80,
+        "paddingX": 10,
+        "paddingY": 8
+    },
+    "game": {
+        "initialLives": 3,
+        "scorePerBrick": 10,
+        "timeMultiplierDecay": 0.05
+    },
+    "powerups": {
+        "paddle_extend": { "extra_width": 40, "duration": 5, "drop_rate": 0.3 },
+        "multi_ball": { "extra_balls": 2, "duration": 0, "drop_rate": 0.3 },
+        "slow_ball": { "speed_factor": 0.7, "duration": 5, "drop_rate": 0.3 }
+    }
+}
