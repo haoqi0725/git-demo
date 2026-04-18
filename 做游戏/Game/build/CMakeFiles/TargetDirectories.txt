@@ -1,0 +1,3 @@
+/home/cly/Test/Game/build/CMakeFiles/shadow_echo.dir
+/home/cly/Test/Game/build/CMakeFiles/edit_cache.dir
+/home/cly/Test/Game/build/CMakeFiles/rebuild_cache.dir

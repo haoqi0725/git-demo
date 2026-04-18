@@ -1,0 +1,7 @@
+{
+    "window": { "width": 800, "height": 600, "title": "Breakout - Level 2" },
+    "ball": { "radius": 8, "speedX": 4, "speedY": -5, "gravity": 0.1, "maxSpeed": 18, "bounceForce": 0.6 },
+    "paddle": { "width": 100, "height": 15, "speed": 22, "yOffset": 50, "boostSpeed": 32 },
+    "bricks": { "rows": 4, "cols": 8, "width": 75, "height": 22, "startX": 50, "startY": 80, "paddingX": 8, "paddingY": 6 },
+    "game": { "initialLives": 3, "scorePerBrick": 15, "timeMultiplierDecay": 0.08 }
+}
