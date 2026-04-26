@@ -1,0 +1,4 @@
+/mnt/d/桌面/git-demo/week7/build/CMakeFiles/breakout.dir
+/mnt/d/桌面/git-demo/week7/build/CMakeFiles/test_serialize.dir
+/mnt/d/桌面/git-demo/week7/build/CMakeFiles/edit_cache.dir
+/mnt/d/桌面/git-demo/week7/build/CMakeFiles/rebuild_cache.dir
