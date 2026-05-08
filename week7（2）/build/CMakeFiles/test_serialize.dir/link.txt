@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/test_serialize.dir/tests/test_serialize.cpp.o -o test_serialize 
