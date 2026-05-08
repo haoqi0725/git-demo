@@ -1,0 +1,144 @@
+#include "../include/Game.h"
+#include "../include/nlohmann/json.hpp"
+#include <fstream>
+#include <iostream>
+#include <ctime>
+#include <algorithm>
+
+using json = nlohmann::json;
+
+// ========== 构造函数 ==========
+Game::Game() 
+    : SW(800), SH(600), windowTitle("ARKANOID 2D")
+    , state(GameState::MENU), score(0), lives(3)
+    , ball({400, 300}, {3, -4}, 10)
+    , paddle(350, 550, 100, 20)
+    , playerName(""), nameInputCursor(0), isEnteringName(false) {
+}
+
+Game::~Game() {
+}
+
+// ========== 加载配置文件（完整版） ==========
+void Game::LoadConfig(const std::string& path) {
+    try {
+        std::ifstream file(path);
+        if (!file.is_open()) {
+            std::cerr << "Warning: Cannot open config file: " << path << std::endl;
+            std::cerr << "Using default values." << std::endl;
+            // 设置默认值
+            SW = 800; SH = 600; windowTitle = "ARKANOID 2D";
+            config.ballRadius = 10; config.ballSpeedX = 3; config.ballSpeedY = -4;
+            config.gravity = 0.08; config.maxSpeed = 15; config.bounceForce = 0.5;
+            config.paddleWidth = 100; config.paddleHeight = 20; config.paddleSpeed = 8; config.paddleYOffset = 50;
+            config.paddleBoostSpeed = 28;
+            config.brickRows = 4; config.brickCols = 9;
+            config.brickWidth = 75; config.brickHeight = 25;
+            config.brickStartX = 25; config.brickStartY = 80;
+            config.brickPaddingX = 10; config.brickPaddingY = 8;
+            config.initialLives = 3; config.scorePerBrick = 10;
+            config.timeMultiplierDecay = 0.05;
+            return;
+        }
+        
+        json configJson = json::parse(file);
+        
+        // 读取窗口配置
+        SW = configJson.value("window", json::object()).value("width", 800);
+        SH = configJson.value("window", json::object()).value("height", 600);
+        windowTitle = configJson.value("window", json::object()).value("title", "ARKANOID 2D");
+        
+        // 读取 Ball 配置
+        auto ballConfig = configJson.value("ball", json::object());
+        config.ballRadius = ballConfig.value("radius", 10.0f);
+        config.ballSpeedX = ballConfig.value("speedX", 3.0f);
+        config.ballSpeedY = ballConfig.value("speedY", -4.0f);
+        config.gravity = ballConfig.value("gravity", 0.08f);
+        config.maxSpeed = ballConfig.value("maxSpeed", 15.0f);
+        config.bounceForce = ballConfig.value("bounceForce", 0.5f);
+        
+        // 读取 Paddle 配置
+        auto paddleConfig = configJson.value("paddle", json::object());
+        config.paddleWidth = paddleConfig.value("width", 100);
+        config.paddleHeight = paddleConfig.value("height", 20);
+        config.paddleSpeed = paddleConfig.value("speed", 8);
+        config.paddleYOffset = paddleConfig.value("yOffset", 50);
+        config.paddleBoostSpeed = paddleConfig.value("boostSpeed", 28);
+        
+        // 读取 Bricks 配置
+        auto bricksConfig = configJson.value("bricks", json::object());
+        config.brickRows = bricksConfig.value("rows", 4);
+        config.brickCols = bricksConfig.value("cols", 9);
+        config.brickWidth = bricksConfig.value("width", 75.0f);
+        config.brickHeight = bricksConfig.value("height", 25.0f);
+        config.brickStartX = bricksConfig.value("startX", 25.0f);
+        config.brickStartY = bricksConfig.value("startY", 80.0f);
+        config.brickPaddingX = bricksConfig.value("paddingX", 10.0f);
+        config.brickPaddingY = bricksConfig.value("paddingY", 8.0f);
+        
+        // 读取 Game 配置
+        auto gameConfig = configJson.value("game", json::object());
+        config.initialLives = gameConfig.value("initialLives", 3);
+        config.scorePerBrick = gameConfig.value("scorePerBrick", 10);
+        config.timeMultiplierDecay = gameConfig.value("timeMultiplierDecay", 0.05f);
+        
+        std::cout << "Config loaded: " << SW << "x" << SH << ", Ball speed: " 
+                  << config.ballSpeedX << "," << config.ballSpeedY << std::endl;
+        
+    } catch (const std::exception& e) {
+        std::cerr << "Error loading config: " << e.what() << std::endl;
+        std::cerr << "Using default values." << std::endl;
+    }
+}
+
+// ========== 初始化 ==========
+void Game::Init() {
+    LoadConfig("config/config.json");
+    LoadLeaderboard();
+    
+    // 使用配置创建 ball 和 paddle
+    ball = Ball({(float)SW/2, (float)SH/2}, 
+                {config.ballSpeedX, config.ballSpeedY}, 
+                config.ballRadius);
+    paddle = Paddle((SW - config.paddleWidth) / 2, 
+                    SH - config.paddleYOffset, 
+                    config.paddleWidth, 
+                    config.paddleHeight);
+    
+    BuildBricks();
+}
+
+// ========== 构建砖块（使用配置参数） ==========
+void Game::BuildBricks() {
+    bricks.clear();
+    for (int r = 0; r < config.brickRows; r++) {
+        for (int c = 0; c < config.brickCols; c++) {
+            float x = config.brickStartX + c * (config.brickWidth + config.brickPaddingX);
+            float y = config.brickStartY + r * (config.brickHeight + config.brickPaddingY);
+            bricks.emplace_back(x, y, config.brickWidth, config.brickHeight);
+        }
+    }
+}
+
+// ========== 重置游戏 ==========
+void Game::ResetGame() {
+    score = 0;
+    lives = config.initialLives;
+    BuildBricks();
+    ball.Reset({(float)SW/2, (float)SH/2}, 
+               {config.ballSpeedX, config.ballSpeedY});
+    paddle = Paddle((SW - config.paddleWidth) / 2, 
+                    SH - config.paddleYOffset, 
+                    config.paddleWidth, 
+                    config.paddleHeight);
+    isEnteringName = false;
+    playerName = "";
+}
+
+// ========== 其余函数（保持之前正确实现的版本） ==========
+// ... 这里需要保留之前已实现的 LoadLeaderboard, SaveLeaderboard, AddScoreToLeaderboard,
+// Update, Draw, 各种Handle和Draw函数。由于篇幅，省略，但请确保复制完整。
+
+// 注意：以下只展示关键部分，实际需要合并之前的完整 Game.cpp。
+// 我们将在下一步提供完整文件。
+

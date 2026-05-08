@@ -1,0 +1,7 @@
+{
+    "window": { "width": 800, "height": 600, "title": "Breakout - Level 3" },
+    "ball": { "radius": 6, "speedX": 500, "speedY": -600, "gravity": 0.12, "maxSpeed": 20, "bounceForce": 0.7 },
+    "paddle": { "width": 80, "height": 15, "speed": 300, "yOffset": 50, "boostSpeed": 36 },
+    "bricks": { "rows": 5, "cols": 10, "width": 65, "height": 20, "startX": 25, "startY": 80, "paddingX": 6, "paddingY": 5 },
+    "game": { "initialLives": 5, "scorePerBrick": 20, "timeMultiplierDecay": 0.1 }
+}
