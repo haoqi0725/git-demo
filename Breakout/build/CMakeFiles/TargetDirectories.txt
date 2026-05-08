@@ -1,3 +1,0 @@
-/mnt/d/桌面/git-demo/Breakout/build/CMakeFiles/breakout_week2.dir
-/mnt/d/桌面/git-demo/Breakout/build/CMakeFiles/edit_cache.dir
-/mnt/d/桌面/git-demo/Breakout/build/CMakeFiles/rebuild_cache.dir
