@@ -1,0 +1,27 @@
+{
+    "window": { "width": 800, "height": 600, "title": "Breakout - Level 1" },
+    "ball": { "radius": 10, "speedX": 300, "speedY": -400, "gravity": 0.08, "maxSpeed": 800, "bounceForce": 0.5 },
+    "paddle": { "width": 120, "height": 15, "speed": 450, "yOffset": 100, "boostSpeed": 28 },
+    "bricks": {
+        "rows": 5,
+        "cols": 8,
+        "width": 85,
+        "height": 25,
+        "startX": 25,
+        "startY": 80,
+        "paddingX": 10,
+        "paddingY": 8,
+        "layout": [
+            [2, 2, 2, 2, 2, 2, 2, 2],
+            [2, 1, 1, 1, 1, 1, 1, 2],
+            [2, 1, 1, 1, 1, 1, 1, 2],
+            [2, 1, 1, 1, 1, 1, 1, 2],
+            [2, 2, 2, 2, 2, 2, 2, 2]
+        ],
+        "health_map": {
+            "1": 1,
+            "2": 2
+        }
+    },
+    "game": { "initialLives": 5, "scorePerBrick": 10, "timeMultiplierDecay": 0.05 }
+}
